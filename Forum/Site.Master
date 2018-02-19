@@ -1,0 +1,199 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Forum.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="pt">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="Content/Site.css" type="text/css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script type="text/javascript">
+        function homeRedirect() {
+            window.location = "home.aspx";
+        }
+
+        function logout() {
+            $.ajax({
+                type: "POST",
+                url: "ServicesLogin.asmx/Logout",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert("See you!");
+                    window.location.reload();
+                }
+            });
+        }
+
+        function execLogin() {
+            if ($("#txt_Execlogin").val() == "" || $("#txt_Execpassword").val() == "") {
+                alert("Please fill all fields.");
+                return false;
+            }
+
+            var login = $("#txt_Execlogin").val();
+            var password = $("#txt_Execpassword").val();
+
+            var parameters = {
+                login: login,
+                password: password
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "ServicesLogin.asmx/ExecLogin",
+                data: JSON.stringify(parameters),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.d != "") {
+                        alert(data.d);
+                        window.location.reload();
+                    }
+                    else {
+                        alert("User not found!");
+                        $("#txt_Execlogin").val("");
+                        $("#txt_Execpassword").val("");
+                    }
+                },
+                failure: function (data) {
+                    alert("Error! Please try again later.");
+                }
+            });
+        }
+
+        function openModalLogin() {
+            $("#div_modal_login").dialog();
+        }
+
+        function changeMenusLogin(message) {
+            $(".haveToLogin").hide();
+            $(".hasLogin").show();
+            $("#lbl_UserWelcome").text(message);
+        }
+
+        function changeMenusLogout() {
+            $(".hasLogin").hide();
+            $(".haveToLogin").show();
+            $("#lbl_UserWelcome").text();
+        }
+
+        function openModalSignup() {
+            $("#div_modal_signup").dialog();
+        }
+
+        function createUser() {            
+            if ($("#txt_nameNewUser").val() == "" || $("#txt_loginNewUser").val() == "" || $("#txt_passwordNewUser").val() == "" || $("#txt_passwordRepeat").val() == "") {
+                alert("Please fill all fields.");
+                return false;
+            }
+
+            if ($("#txt_passwordNewUser").val() != $("#txt_passwordRepeat").val()) {
+                alert("The password fields do not match.");
+                return false;
+            }
+
+            var name = $("#txt_nameNewUser").val();
+            var login = $("#txt_loginNewUser").val();
+            var password = $("#txt_passwordNewUser").val();
+
+            var parameters = {
+                name: name,
+                login: login,
+                password: password
+            }            
+
+            $.ajax({
+                type: "POST",
+                url: "ServicesLogin.asmx/CreateUser",
+                data: JSON.stringify(parameters),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert(data.d);
+                    if (data.d.indexOf("Error") == -1) {                        
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+</script>
+</head>
+<body style="margin: 0;">
+    <form runat="server">
+        <div style="height: 60px; background-image: url(../Content/Images/Header.jpg); background-position: left;">
+            <ul style="margin: 0; padding: 0 20px; color: #fff; line-height: 60px; list-style: none; font-weight: bolder;">
+                <li style="float: left;" onclick="homeRedirect()"><asp:Label id="lbl_home" runat="server" style="cursor: pointer;" Text="Home"></asp:Label></li>
+                
+                <li style="float: right;" class="haveToLogin" onclick="openModalSignup()"><asp:Label id="lbl_signup" runat="server" style="cursor: pointer;" Text="Sign Up"></asp:Label></li>
+                <li style="float: right;" class="haveToLogin"><asp:Label id="lbl_1" runat="server" style="margin: 0 5px;" Text="/"></asp:Label></li>
+                <li style="float: right;" onclick="openModalLogin()" class="haveToLogin"><asp:Label id="lbl_login" runat="server" style="cursor: pointer;" Text="Login"></asp:Label></li>
+
+                <li style="float: right; display: none;" onclick="logout()" class="hasLogin"><asp:Label id="lbl_logout" runat="server" style="cursor: pointer;" Text="Logout"></asp:Label></li>
+                <li style="float: right; display: none;" class="hasLogin"><asp:Label id="Label2" runat="server" style="margin: 0 5px;" Text="/"></asp:Label></li>
+                <li style="float: right; display: none;" class="hasLogin"><asp:Label id="lbl_UserWelcome" runat="server" Text=""></asp:Label></li>
+            </ul>
+        </div>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+
+        <div id="div_modal_login" style="display: none;">
+            <table>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="lbl_Execlogin" Text="Login:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_Execlogin" placeholder="login" CssClass="required"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="lbl_Execpassword" Text="Password:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_Execpassword" placeholder="password" TextMode="Password" CssClass="required"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td><asp:Button runat="server" ID="btn_Execlogin" OnClientClick="execLogin()" Text="Login" /></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div id="div_modal_signup" style="display: none;">
+            <table>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="Label5" Text="Name:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_nameNewUser" placeholder="Name" CssClass="required" MaxLength="500"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="Label1" Text="Login:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_loginNewUser" placeholder="login" CssClass="required" MaxLength="20"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="Label3" Text="Password:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_passwordNewUser" placeholder="password" TextMode="Password" CssClass="required" MaxLength="50"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:label runat="server" ID="Label4" Text="Repeat Password:"></asp:label>
+                        <asp:TextBox runat="server" ID="txt_passwordRepeat" placeholder="password" TextMode="Password" CssClass="required" MaxLength="50"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td><asp:Button runat="server" ID="btn_createUser" OnClientClick="createUser()" Text="Create User" /></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</body>
+</html>
