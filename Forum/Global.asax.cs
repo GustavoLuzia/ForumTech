@@ -9,5 +9,13 @@ namespace Forum
         {
             
         }
-    }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            if (Request.Url.LocalPath == "/")
+            {
+                Response.Redirect(Request.Url + "Home.aspx"); 
+            }
+        }
+    }    
 }
