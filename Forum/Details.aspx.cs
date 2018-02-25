@@ -67,7 +67,7 @@ namespace Forum
                     }
 
                     htmlMain += "</div>";
-                    htmlMain += "<div><label>" + readerMainContent["Users_Name"] + " - " + readerMainContent["Creation_Date"].ToString() + "</label></div>";
+                    htmlMain += "<div style=\"font-weight: bold;\"><label>" + readerMainContent["Users_Name"] + " - " + readerMainContent["Creation_Date"].ToString() + "</label></div>";
                     htmlMain += "<br />";
                     htmlMain += "<div id=\"div_main_content\" style=\"padding-left: 20px;\">" + readerMainContent["Posts_Description"] + "</div>";
                     htmlMain += "<hr>";
@@ -105,7 +105,7 @@ namespace Forum
                 while (readerReply.Read())
                 {
                     string htmlReply = "";
-                    htmlReply += "<div>";
+                    htmlReply += "<div style=\"font-weight: bold;\">";
                     htmlReply += "  <label> " + readerReply["Users_Name"] + " - " + readerReply["Creation_Date"].ToString() + "</label>";
 
                     if (cookie != null && cookie.Values["ID"] == readerReply["Posts_Comments_User"].ToString())
