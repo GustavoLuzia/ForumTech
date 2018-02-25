@@ -13,6 +13,15 @@ namespace Forum {
     public partial class _Default {
         
         /// <summary>
+        /// Controle lbl_Search.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_Search;
+        
+        /// <summary>
         /// Controle div_content.
         /// </summary>
         /// <remarks>

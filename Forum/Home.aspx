@@ -33,12 +33,41 @@
                 }
             });
         }
+
+        function filterList() {
+            $("#MainContent_tbody_content tr :nth-child(1) label").each(function () {
+                if ($(this).text().toLowerCase().indexOf($("#txt_filter").val().toLowerCase()) > -1) {
+                    $(this).closest('tr').show();
+                }
+                else {
+                    $(this).closest('tr').hide();
+                }
+            });
+        }
     </script>
 
-    <div style="background-image: url(Content/Images/Background.jpg);width: 100%;height: 800px;">
-        <div style="height: 50px;"></div>
+    <div style="background-image: url(Content/Images/Background.jpg);width: 100%;min-height: 800px;background-repeat-y: repeat;">
+        <div style="height: 50px;">
+            <br />
+            <div style="margin: auto; width: 70%; height: 100%; background-color: #fff;">
+                <table style="width: 100%; height: 100%; border-collapse: collapse; border: 1px solid gray;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 0 20px;background-color: #0c2da7;">
+                                <div style="font-size: 20px;display: inline-block;height: 100%;line-height: 50px;color: #fff;">
+                                    <asp:Label runat="server" id="lbl_Search" Text="Search"></asp:Label>
+                                </div>
+                            </td>
+                            <td style="width: 100%; height: 100%; line-height: 50px; padding: 0; overflow: hidden;">
+                                <input type="text" id="txt_filter" onkeyup="filterList()" placeholder="Title" style="width: 100%; height: Calc(100% - 2px); border: none; padding: 0; margin: 0; margin-left: 20px; outline: none; font-size: 18px;">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div style="width: 70%; margin: auto; padding-top: 50px">
-            <div id="div_content" runat="server" style="height: 500px; background-color: white;">
+            <div id="div_content" runat="server" style="min-height: 500px; background-color: white;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead style="background-color: #0c2da7; color: #fff; font-size: 20px;">
                         <tr style="height: 35px;">
@@ -48,7 +77,7 @@
                             <th><asp:Label runat="server" ID="lbl_Creation_Date" Text="Creation Date"></asp:Label></th>
                         </tr>
                     </thead>
-                    <tbody runat="server" id="tbody_content" style="overflow-y: scroll"></tbody>
+                    <tbody runat="server" id="tbody_content"></tbody>
                 </table>
             </div>
             <br />
